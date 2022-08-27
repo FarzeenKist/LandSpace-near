@@ -1,4 +1,4 @@
-The app is hosted here: https://farzeenkist.github.io/landspace-near/](https://farzeenkist.github.io/landspace-near/)
+The app is hosted here: [https://farzeenkist.github.io/landspace-near/](https://farzeenkist.github.io/landspace-near/)
 
 # LandSpace-Dapp
 
