@@ -1,6 +1,6 @@
 {
-  "homepage": "https://dacadeorg.github.io/near-marketplace-dapp",
-  "name": "near-marketplace-dapp",
+  "homepage": "https://FarzeenKist.github.io/landspace-near",
+  "name": "landspace-dapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,10 +13,10 @@
     "bootstrap-icons": "^1.7.1",
     "near-api-js": "^0.43.1",
     "prop-types": "^15.7.2",
-    "react": "^17.0.2",
+    "react": "^18.0.0",
     "react-bootstrap": "^2.0.3",
     "react-confirm-alert": "^2.7.0",
-    "react-dom": "^17.0.2",
+    "react-dom": "^18.0.0",
     "react-hooks-identicons": "^1.0.3",
     "react-scripts": "4.0.3",
     "react-toastify": "^8.1.0",

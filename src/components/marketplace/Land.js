@@ -30,6 +30,8 @@ const Land = ({ land, buy, bid, accountId, endAuction }) => {
 	const triggerEndAuction = () => {
 		endAuction(id);
 	}
+	// endAt is converted into milliseconds then divided into seconds into hours
+	const endsInHours = Math.ceil(((endAt / 1000000) - new Date()) / 1000 / 3600) ;
 
 	return (
 		<Col key={id}>
@@ -83,7 +85,7 @@ const Land = ({ land, buy, bid, accountId, endAuction }) => {
 									onClick={triggerBid}
 									className="mt-2 px-5"
 								>
-									Bid
+									Bid(ends in {endsInHours}hours)
 								</Button>
 							</Form.Group>
 							<Button

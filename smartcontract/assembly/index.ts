@@ -47,7 +47,7 @@ export function bid(landId: string, newBid: u128): void {
 	assert(context.sender.toString() != land.owner, "You can't bid on your own land");
 	assert(land.sold == false, "Land is already sold");
 	assert(
-		newBid > land.currentBid && newBid >= land.startingPrice,
+		u128.gt(newBid,land.currentBid) && u128.ge(newBid,land.startingPrice),
 		"New bid must be greater than current bid"
 	);
 	assert(context.sender.toString() != land.bidder, "You can't outbid yourself");

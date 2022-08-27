@@ -1,8 +1,4 @@
-import {
-	PersistentUnorderedMap,
-	context,
-	u128
-} from "near-sdk-as";
+import { PersistentUnorderedMap, context, u128 } from "near-sdk-as";
 
 /**
  * This class represents a product that can be listed on a marketplace.
@@ -53,10 +49,10 @@ export class Land {
 			this.bidder = "";
 			this.sold = true;
 			return this.owner;
-		}else{
-            this.sold = true;
-            return "";
-        }
+		} else {
+			this.sold = true;
+			return "";
+		}
 	}
 
 	public buyLand(): void {
@@ -66,6 +62,6 @@ export class Land {
 	}
 }
 
-export const landsStorage= new PersistentUnorderedMap<string, Land>(
+export const landsStorage = new PersistentUnorderedMap<string, Land>(
 	"LISTED_LANDS"
 );

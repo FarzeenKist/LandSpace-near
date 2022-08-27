@@ -37,7 +37,7 @@ const AddLand = ({ save }) => {
           <Modal.Body>
             <FloatingLabel
               controlId="inputName"
-              label="Product name"
+              label="Land/Home name"
               className="mb-3"
             >
               <Form.Control
@@ -45,7 +45,7 @@ const AddLand = ({ save }) => {
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
-                placeholder="Enter name of product"
+                placeholder="Enter name of land/home"
               />
             </FloatingLabel>
             <FloatingLabel
