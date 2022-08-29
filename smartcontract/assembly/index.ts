@@ -1,4 +1,4 @@
-import { Land, landsStorage } from "./model";
+import { Land, landsStorage, userLandsStorage } from "./model";
 import { context, ContractPromiseBatch, u128 } from "near-sdk-as";
 
 /**
@@ -16,7 +16,7 @@ export function buyLand(landId: string): void {
 	}
 	if (land.instantPrice.toString() != context.attachedDeposit.toString()) {
 		throw new Error(
-			"attached deposit should be equal to the product's price"
+			"attached deposit should be equal to the land's price"
 		);
 	}
 	/*
@@ -30,6 +30,14 @@ export function buyLand(landId: string): void {
 	ContractPromiseBatch.create(land.owner).transfer(context.attachedDeposit);
 	land.buyLand();
 	landsStorage.set(land.id, land);
+
+	let userLands = userLandsStorage.get(context.sender);
+	if(userLands == null){
+		userLands = [];
+	}
+
+	userLands.push(landId);
+	userLandsStorage.set(context.sender, userLands);
 }
 
 /**
@@ -63,6 +71,14 @@ export function bid(landId: string, newBid: u128): void {
 	if (land.currentBid >= land.instantPrice){
 		ContractPromiseBatch.create(land.owner).transfer(land.currentBid);
 		land.endAuction();
+
+		let userLands = userLandsStorage.get(context.sender);
+		if(userLands == null){
+			userLands = [];
+		}
+
+		userLands.push(landId);
+		userLandsStorage.set(context.sender, userLands);
 	}
 	landsStorage.set(land.id, land);
 }
@@ -84,20 +100,42 @@ export function endAuction(landId: string): void {
 	assert(context.blockTimestamp >= land.endAt, "Auction isn't over");
 	if (land.bidder.toString() != "") {
 		ContractPromiseBatch.create(land.owner).transfer(land.currentBid);
+
+		let userLands = userLandsStorage.get(land.bidder);
+		if(userLands == null){
+			userLands = [];
+		}
+
+		userLands.push(landId);
+		userLandsStorage.set(land.bidder, userLands);
 	}
 	land.endAuction();
 	landsStorage.set(land.id, land);
 }
 
 /**
- *
+ * Adding a new land to the contract
  * @param land - a land to be added to the blockchain
  */
 export function setLand(land: Land): void {
 	let storedLand = landsStorage.get(land.id);
-	if (storedLand !== null) {
+	if (storedLand != null) {
 		throw new Error(`a land with id=${land.id} already exists`);
 	}
+
+	if(land.name.length < 3){
+		throw new Error("Land name is required")
+	}
+	if(land.location.length < 3){
+		throw new Error("Land location is required")
+	}
+	if(land.startingPrice < u128.Min){
+		throw new Error("Land starting price is required")
+	}
+	if(land.instantPrice < u128.Min){
+		throw new Error("Land instant price is required")
+	}
+
 	landsStorage.set(land.id, Land.createLand(land));
 }
 
@@ -120,4 +158,28 @@ export function getLand(id: string): Land | null {
  */
 export function getLands(): Array<Land> {
 	return landsStorage.values();
+}
+
+/**
+ *
+ * A function that returns an array of lands bought by given user
+ *
+ * @returns an array of objects that represent lands
+ */
+export function getUserLands(accountId: string): Array<Land> {
+
+	if(accountId.length < 3){
+		throw new Error("Account ID is required");
+	}
+
+	let userLandsIDs = userLandsStorage.get(accountId);
+
+	let userLands : Land[] = [];
+
+	for(let i=0; i<userLandsIDs.length; i++){
+		if(landsStorage.contains(userLandsIDs[i])){
+			userLands.push(landsStorage.getSome(userLandsIDs[i]));
+		}
+	}
+	return userLands;
 }
