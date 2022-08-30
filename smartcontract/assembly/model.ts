@@ -22,20 +22,20 @@ export class Land {
 	endAt: u64;
 
 	public static createLand(payload: Land): Land {
-		const product = new Land();
-		product.id = payload.id;
-		product.name = payload.name;
-		product.description = payload.description;
-		product.image = payload.image;
-		product.location = payload.location;
-		product.startingPrice = payload.startingPrice;
-		product.instantPrice = payload.instantPrice;
-		product.currentBid = payload.currentBid;
-		product.owner = context.sender;
-		product.bidder = "";
-		product.sold = false;
-		product.endAt = context.blockTimestamp + u64(payload.endAt);
-		return product;
+		const land = new Land();
+		land.id = payload.id;
+		land.name = payload.name;
+		land.description = payload.description;
+		land.image = payload.image;
+		land.location = payload.location;
+		land.startingPrice = payload.startingPrice;
+		land.instantPrice = payload.instantPrice;
+		land.currentBid = payload.currentBid;
+		land.owner = context.sender;
+		land.bidder = "";
+		land.sold = false;
+		land.endAt = context.blockTimestamp + u64(payload.endAt);
+		return land;
 	}
 
 	public bid(newBid: u128): void {
@@ -43,15 +43,14 @@ export class Land {
 		this.bidder = context.sender;
 	}
 
-	public endAuction(): string {
+	public endAuction(): void {
 		if (this.bidder.toString() != "") {
 			this.owner = this.bidder;
 			this.bidder = "";
 			this.sold = true;
-			return this.owner;
+			this.currentBid = u128.Min;
 		} else {
 			this.sold = true;
-			return "";
 		}
 	}
 
@@ -59,9 +58,14 @@ export class Land {
 		this.bidder = "";
 		this.owner = context.sender;
 		this.sold = true;
+		this.currentBid = u128.Min;
 	}
 }
 
 export const landsStorage = new PersistentUnorderedMap<string, Land>(
 	"LISTED_LANDS"
+);
+
+export const userLandsStorage = new PersistentUnorderedMap<string, string[]>(
+	"LUL"
 );
