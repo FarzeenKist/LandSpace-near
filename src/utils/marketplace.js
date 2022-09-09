@@ -6,7 +6,7 @@ const GAS = 100000000000000;
 const nanosecond = 1000000000;
 export function createLand(land) {
   land.id = uuid4();
-  land.endAt = String(land.endAt * 24 * 3600 * nanosecond); 
+  land.endAt = String(land.endAt * 60 * nanosecond); 
   land.startingPrice = parseNearAmount(land.startingPrice + "");
   land.instantPrice = parseNearAmount(land.instantPrice + "");
   land.currentBid = parseNearAmount(0 + "");
